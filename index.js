@@ -170,23 +170,23 @@ async function run() {
     //   res.send(result);
     // })
 
-    app.post("/available", async (req, res) => {
-      const { startDate, endDate, page, limit } = req.body;
-      // console.log(startDate, endDate);
+    app.get("/available", async (req, res) => {
+      const { start, end, page, limit } = req.query;
+      console.log(req.query);
       const hotels = HotelCollection.find({});
       const allHotels = await hotels.toArray();
       const find = BookedHotelCollection.find({
         $or: [
           {
             $and: [
-              { arrival: { $lt: new Date(startDate) } },
-              { departure: { $gt: new Date(startDate) } }
+              { arrival: { $lt: new Date(start) } },
+              { departure: { $gt: new Date(start) } }
             ]
           },
           {
             $and: [
-              { arrival: { $lt: new Date(endDate) } },
-              { departure: { $gt: new Date(endDate) } }
+              { arrival: { $lt: new Date(end) } },
+              { departure: { $gt: new Date(end) } }
             ]
           }
         ]
