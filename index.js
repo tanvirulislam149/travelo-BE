@@ -30,7 +30,7 @@ async function run() {
     const BookedHotelCollection = client.db("travelo").collection("bookedHotels");
 
     app.get("/hotels", async (req, res) => {
-      const hotels = HotelCollection.find({});
+      const hotels = HotelCollection.find({}).project({ guests_included: 1, accommodates: 1 });
       const result = await hotels.toArray();
       res.send(result);
     })
@@ -194,7 +194,8 @@ async function run() {
       const bookedHotels = await find.toArray();
       const allResult = allHotels.filter(h => !bookedHotels.find(b => b.id === h.id));
       const result = allResult.slice(((page - 1) * limit), page * limit);
-      res.send(result);
+      const totalCount = allResult.length;
+      res.send({ result, totalCount });
     })
 
 
